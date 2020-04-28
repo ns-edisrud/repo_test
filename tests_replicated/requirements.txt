@@ -1,0 +1,5 @@
+ansicolor
+behave
+boto3
+requests
+git+git://github.com/NarrativeScience/generic_behave#egg=generic_behave
