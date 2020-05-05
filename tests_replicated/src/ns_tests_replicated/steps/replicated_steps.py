@@ -8,7 +8,8 @@ import json
 
 from behave import given, then, when, use_step_matcher
 from behave.runner import Context
-from generic_behave.test_utils.behave.src.ns_behave.step_library.generic_behave_steps import generic_assert_steps
+
+from generic_behave.ns_behave.step_library.generic_behave_steps import generic_assert_steps
 
 # Enable the regex step matcher for behave in this class
 use_step_matcher("re")
