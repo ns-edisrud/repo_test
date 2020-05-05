@@ -1,0 +1,16 @@
+.DS_Store
+.venv*
+.vscode
+**/__pycache__/
+**/.cache/
+**/.tox
+**/*.coverage
+**/*.egg-info
+**/*.pyc
+**/dist
+.pants.d
+dist
+.pids
+.pants.workdir.file_lock
+# PyCharm files
+**/.idea/
