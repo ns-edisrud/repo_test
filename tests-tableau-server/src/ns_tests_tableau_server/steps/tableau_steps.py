@@ -43,8 +43,16 @@ def step_set_browser_size(ctx: Context, width: int, height: int) -> None:
     LOGGER.debug(f"Browser size successfully set to {width}x{height}")
 
 
-@step(
-    "the user goes to the page (?P<url>.*)"
+@step("the user goes to the page (?P<url>.*)"
 )
 def step_go_to_page(ctx: Context, url: str) -> None:
     ctx.driver.get(url)
+
+
+@step("the user logs in")
+def step_logi_in(ctx: Context) -> None:
+    ctx.SigninPage.log_in(ctx)
+
+@step("the user clicks the (?P<tab_name>edit) tab")
+def step_click_tableau_tab(ctx: Context, tab_name: str) -> None:
+    ctx.WorkbookPage.click_tab(f'{tab_name}_tab')

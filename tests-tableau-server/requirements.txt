@@ -1,0 +1,7 @@
+ansicolor
+behave
+credstash
+boto3
+requests
+wheel
+generic-behave @ git+git://github.com/NarrativeScience/generic_behave

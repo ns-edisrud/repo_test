@@ -3,6 +3,7 @@ import os
 import platform
 import time
 from types import MethodType
+import credstash
 
 from behave.contrib.scenario_autoretry import patch_scenario_with_autoretry
 from behave.model import Feature, Scenario, Step
@@ -14,7 +15,8 @@ from urllib3.exceptions import ProtocolError
 from xvfbwrapper import Xvfb
 
 from generic_behave.ns_behave.common import environment_functions
-from generic_behave.ns_selenium import PAGE_CLASSES
+from ns_page_objects import PAGE_CLASSES
+
 
 # Set up a logger
 LOGGER = logging.getLogger(__name__)
@@ -168,6 +170,13 @@ def after_step(ctx: Context, step: Step):
 def set_user_data(ctx: Context) -> None:
     """Retrieve behave -userdata values, setting them on the context"""
     user_data = ctx.config.userdata
+    try:
+        ctx.users = credstash.getSecret(name='stg.viz.tableau.login', region='us-east-1')
+    except credstash.ItemNotFound as ex:
+        LOGGER.debug(f'Cloud secret not found: {ex.value}')
+    except (credstash.KmsError, credstash.IntegrityError) as ex:
+        LOGGER.debug(f'Cloud secret exception: {ex.value}')
+    ctx.users = credstash.getSecret('stg.viz.tableau.login')
     ctx.wait_timeout = user_data.getfloat("wait_timeout", 20)
     ctx.max_attempts = user_data.getint("max_attempts", 3)
     ctx.debug_mode = user_data.getbool("debug_mode", False)
@@ -209,16 +218,7 @@ def get_page_url(self) -> str:
 # def save_feature_attributes(ctx: Context) -> None:
 #     """Save feature attributes to context so they are not deleted after the scenario"""
 #     for attribute in (
-#         "app_id",
-#         "app_name",
-#         "app_slug",
-#         "dimensions_measures_map",
-#         "narrative_id",
-#         "narrative_name",
-#         "story_title",
 #         "user_id",
-#         "story_config_id",
-#         "bookmark_id",
 #     ):
 #         value = getattr(ctx, attribute, None)
 #         if value is not None:
