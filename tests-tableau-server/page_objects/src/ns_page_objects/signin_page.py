@@ -44,7 +44,6 @@ class SigninPage:
             ctx: The behave context object.
 
         """
-        import pdb; pdb.set_trace()
         email = json.loads(ctx.users)['username']
         password = json.loads(ctx.users)['password']
         InputFunctions.send_keys_to_element_by_name(

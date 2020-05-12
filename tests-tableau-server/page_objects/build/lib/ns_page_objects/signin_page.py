@@ -42,7 +42,6 @@ class SigninPage:
 
         Args:
             ctx: The behave context object.
-            display_name: The display name of the user to log in as
 
         """
         email = json.loads(ctx.users)['username']

@@ -17,9 +17,9 @@ from xvfbwrapper import Xvfb
 from generic_behave.ns_behave.common import environment_functions
 from ns_page_objects import PAGE_CLASSES
 
-
 # Set up a logger
 LOGGER = logging.getLogger(__name__)
+
 
 # -------------------------------------------------------------------------------------
 # Behave Hooks
@@ -177,8 +177,8 @@ def set_user_data(ctx: Context) -> None:
     except (credstash.KmsError, credstash.IntegrityError) as ex:
         LOGGER.debug(f'Cloud secret exception: {ex.value}')
     ctx.users = credstash.getSecret('stg.viz.tableau.login')
-    ctx.wait_timeout = user_data.getfloat("wait_timeout", 20)
-    ctx.max_attempts = user_data.getint("max_attempts", 3)
+    ctx.wait_timeout = user_data.getfloat("wait_timeout", 10)
+    ctx.max_attempts = user_data.getint("max_attempts", 1)
     ctx.debug_mode = user_data.getbool("debug_mode", False)
     ctx.latency = user_data.get("latency", 0)
 
@@ -370,7 +370,7 @@ def _instantiate_chromedriver(ctx: Context) -> None:
 
     chrome_options = webdriver.ChromeOptions()
     # Prevent images from loading (should decrease load times)
-    prefs = {"profile.managed_default_content_settings.images": 2}
+    prefs = {"profile.managed_default_content_settings.images": 1}
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("--no-sandbox")
     # Ignore CORS errors
@@ -461,9 +461,9 @@ def set_mobile_mode(ctx: Context, gherkin_object) -> None:
                 LOGGER.debug("Mobile mode was set in the feature. Continue.")
         # Check to see if we are set to non default window size or set mobile size
         elif (
-            ctx.driver.get_window_size()["width"] != mobile_width
-            and ctx.driver.get_window_size()["width"]
-            != ctx.default_window_size["width"]
+                ctx.driver.get_window_size()["width"] != mobile_width
+                and ctx.driver.get_window_size()["width"]
+                != ctx.default_window_size["width"]
         ):
             # reset to mobile mode
             ctx.driver.set_window_size(mobile_width, mobile_height)
@@ -484,13 +484,13 @@ def screenshot_on_fail(ctx: Context, gherkin_object) -> None:
     """
     screenshot_dir = os.environ.get(
         "FAILED_SCENARIOS_SCREENSHOTS_DIR",
-        f"{os.getenv('TALOS_ROOT')}/tests-e2e/failed_scenarios_screenshots",
+        f"{os.getenv('REPO_TEST_ROOT')}/tests-tableau-server/failed_scenarios_screenshots",
     )
     if gherkin_object.status == "failed":
         LOGGER.debug(
             f"Taking screen-shot from failed {gherkin_object.keyword}: {gherkin_object.name}"
         )
-        if ctx.build_number:
+        if hasattr(ctx, "build_number") and ctx.build_number:
             screenshot_location = os.path.join(
                 screenshot_dir,
                 f"{ctx.build_number}_{gherkin_object.name}_failed.png".replace(

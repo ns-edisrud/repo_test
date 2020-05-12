@@ -13,10 +13,6 @@ LOGGER = logging.getLogger(__name__)
 class WorkbookPage(SigninPage):
     """
     Page object for the sign in page.
-
-    URL:
-        /signin
-
     """
 
     locators = {
@@ -31,5 +27,4 @@ class WorkbookPage(SigninPage):
             tab_name: The name of the tab to click on
 
         """
-        import pdb; pdb.set_trace()
         ClickFunctions.click_element_by_name(ctx, self.locators, tab_name)
